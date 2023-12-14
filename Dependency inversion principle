@@ -1,0 +1,76 @@
+#include <iostream>
+
+// Абстракція високорівневого модуля
+class SwitchableDevice {
+public:
+    virtual void turnOn() = 0;
+    virtual void turnOff() = 0;
+};
+
+// Низькорівневий модуль #1: лампочка
+class LightBulb : public SwitchableDevice {
+public:
+    void turnOn() override {
+        std::cout << "Light bulb is ON." << std::endl;
+    }
+
+    void turnOff() override {
+        std::cout << "Light bulb is OFF." << std::endl;
+    }
+};
+
+// Низькорівневий модуль #2: телевізор
+class Television : public SwitchableDevice {
+public:
+    void turnOn() override {
+        std::cout << "Television is ON." << std::endl;
+    }
+
+    void turnOff() override {
+        std::cout << "Television is OFF." << std::endl;
+    }
+};
+
+// Високорівневий модуль: додаток для керування пристроями
+class DeviceController {
+private:
+    SwitchableDevice* device;
+
+public:
+    void setDevice(SwitchableDevice* newDevice) {
+        device = newDevice;
+    }
+
+    void turnDeviceOn() {
+        if (device) {
+            device->turnOn();
+        }
+    }
+
+    void turnDeviceOff() {
+        if (device) {
+            device->turnOff();
+        }
+    }
+};
+
+int main() {
+    LightBulb lightBulb;
+    Television television;
+
+    DeviceController controller;
+
+    // Використання принципу інверсії залежностей:
+    // Високорівневий модуль (DeviceController) залежить від абстракції (SwitchableDevice),
+    // а не від конкретних низькорівневих модулів (LightBulb, Television).
+    
+    controller.setDevice(&lightBulb);
+    controller.turnDeviceOn();
+    controller.turnDeviceOff();
+
+    controller.setDevice(&television);
+    controller.turnDeviceOn();
+    controller.turnDeviceOff();
+
+    return 0;
+}
